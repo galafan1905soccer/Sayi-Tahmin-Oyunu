@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sayı Dedektifi</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #172554;
+      color: white;
+      text-align: center;
+      padding: 50px 16px;
+    }
+
+    main {
+      max-width: 420px;
+      margin: auto;
+      padding: 30px;
+      background: #1e3a8a;
+      border-radius: 20px;
+    }
+
+    input, button {
+      padding: 12px;
+      margin: 6px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    input {
+      width: 100px;
+    }
+
+    button {
+      background: #fde047;
+      color: #172554;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    #mesaj {
+      min-height: 48px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>🔎 Sayı Dedektifi</h1>
+    <p>1 ile 20 arasında bir sayı tuttum.</p>
+    <p>Bakalım kaç denemede bulacaksın!</p>
+
+    <form id="oyun">
+      <label for="tahmin">Tahminin:</label>
+      <input id="tahmin" type="number"
+             min="1" max="20" step="1" required>
+      <button id="dene" type="submit">Tahmin et</button>
+    </form>
+
+    <p id="mesaj" aria-live="polite">İlk tahminini yap!</p>
+    <p>Deneme sayısı: <span id="sayac">0</span></p>
+
+    <button id="yenile" type="button">Yeni oyun</button>
+  </main>
+
+  <script>
+    let gizliSayi = Math.floor(Math.random() * 20) + 1;
+    let deneme = 0;
+
+    const form = document.getElementById("oyun");
+    const input = document.getElementById("tahmin");
+    const mesaj = document.getElementById("mesaj");
+    const sayac = document.getElementById("sayac");
+    const dene = document.getElementById("dene");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      const tahmin = Number(input.value);
+
+      if (!Number.isInteger(tahmin) || tahmin < 1 || tahmin > 20) {
+        mesaj.textContent = "1 ile 20 arasında bir tam sayı gir.";
+        return;
+      }
+
+      deneme++;
+      sayac.textContent = deneme;
+
+      if (tahmin === gizliSayi) {
+        mesaj.textContent = "🎉 Tebrikler! Sayıyı buldun!";
+        dene.disabled = true;
+        input.disabled = true;
+      } else if (tahmin < gizliSayi) {
+        mesaj.textContent = "⬆️ Daha büyük bir sayı dene!";
+      } else {
+        mesaj.textContent = "⬇️ Daha küçük bir sayı dene!";
+      }
+    });
+
+    document.getElementById("yenile").addEventListener("click", function() {
+      gizliSayi = Math.floor(Math.random() * 20) + 1;
+      deneme = 0;
+      sayac.textContent = deneme;
+      mesaj.textContent = "Yeni sayı hazır. İlk tahminini yap!";
+      input.value = "";
+      input.disabled = false;
+      dene.disabled = false;
+      input.focus();
+    });
+  </script>
+</body>
+</html>
